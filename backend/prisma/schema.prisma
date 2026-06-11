@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  phone            String   @unique
+  city             String
+  type             String
+  totalSpent       Float    @default(0)
+  orderCount       Int      @default(0)
+  lastPurchaseDate DateTime?
+  preferredChannel String?
+  churnRisk        Float?
+  engagementScore  Float?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  orders              Order[]
+  communicationEvents CommunicationEvent[]
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  customerId String
+  amount     Float
+  status     String
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model Mission {
+  id              String   @id @default(uuid())
+  name            String
+  status          String   @default("DRAFT") // DRAFT, RUNNING, COMPLETED
+  audienceCount   Int      @default(0)
+  expectedRevenue Float    @default(0)
+  actualRevenue   Float    @default(0)
+  offer           String?
+  channel         String?
+  messageVariants String?  // Stored as JSON string (SQLite limitation)
+  segmentRule     String?  // Stored as JSON string (SQLite limitation)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  communicationEvents CommunicationEvent[]
+}
+
+model CommunicationEvent {
+  id             String   @id @default(uuid())
+  missionId      String
+  customerId     String
+  channel        String
+  status         String   // SENT, DELIVERED, OPENED, CLICKED, PURCHASED, FAILED
+  message        String
+  idempotencyKey String   @unique
+  timestamp      DateTime @default(now())
+
+  mission  Mission  @relation(fields: [missionId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+}
