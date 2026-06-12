@@ -1,14 +1,16 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Target, Activity, Users, MessageSquareText } from 'lucide-react';
+import { Target, Users, MessageSquareText, BarChart3, Database, LayoutDashboard, Rocket, Tag } from 'lucide-react';
 
 const Layout = () => {
   const navItems = [
-    { name: 'Opportunity Center', path: '/', icon: LayoutDashboard },
+    { name: 'Opportunity Center', path: '/opportunities', icon: LayoutDashboard },
     { name: 'Mission Planner', path: '/planner', icon: Target },
-    { name: 'Mission Control', path: '/control', icon: Activity },
+    { name: 'Missions', path: '/missions', icon: Rocket },
+    { name: 'Segments', path: '/segments', icon: Tag },
     { name: 'Customers', path: '/customers', icon: Users },
     { name: 'Ask Catalyst', path: '/ask', icon: MessageSquareText },
+    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
   ];
 
   return (
@@ -16,7 +18,7 @@ const Layout = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-surface-bg border-r border-border-default flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border-default">
-          <h1 className="text-xl font-bold text-primary-blue tracking-tight">CATALYST-AI</h1>
+          <h1 className="text-xl font-bold text-primary-blue tracking-tight">CATALYST</h1>
         </div>
         <nav className="flex-1 py-6 px-4 space-y-1">
           {navItems.map((item) => (
@@ -40,9 +42,7 @@ const Layout = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
-        <header className="h-16 bg-surface-bg border-b border-border-default flex items-center px-8 shadow-sm">
-          <span className="text-sm text-gray-500 font-medium tracking-wide uppercase">AI Growth Manager</span>
-        </header>
+        <header className="h-16 bg-surface-bg border-b border-border-default shadow-sm"></header>
         <div className="flex-1 p-8 overflow-y-auto">
           <Outlet />
         </div>

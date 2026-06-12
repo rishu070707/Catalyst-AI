@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Users, TrendingUp, CheckCircle2, ArrowRight, RefreshCw } from 'lucide-react';
+import { RefreshCw, Users, TrendingUp, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
 import { formatINR } from '../utils/formatINR';
 
 interface Opportunity {
@@ -13,148 +12,117 @@ interface Opportunity {
   potentialRevenue: number;
   confidence: number;
   reasoning: string[];
-  action: string;
 }
 
 const OpportunityCenter = () => {
   const navigate = useNavigate();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [timeAgo, setTimeAgo] = useState<string>('just now');
-  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const [refreshVersion, setRefreshVersion] = useState(0);
-
-  const { data: opportunities, isLoading, error, refetch } = useQuery({
+  const { data: opportunities, isLoading, refetch } = useQuery({
     queryKey: ['opportunities'],
     queryFn: async () => {
       const response = await axios.get<Opportunity[]>('/api/opportunities');
-      setLastUpdated(new Date());
-      setRefreshVersion(v => v + 1); // bump version → triggers fade-in animation
       return response.data;
     },
     staleTime: 0,
-    refetchInterval: 60000,
   });
 
-  // Update "X seconds ago" label every 10 seconds
-  useEffect(() => {
-    const tick = () => setTimeAgo(formatDistanceToNow(lastUpdated, { addSuffix: true }));
-    tick();
-    const interval = setInterval(tick, 10000);
-    return () => clearInterval(interval);
-  }, [lastUpdated]);
-
   const handleRefresh = async () => {
-    setIsManualRefreshing(true);
-    try {
-      await refetch(); // awaiting refetch() keeps spinner alive for the full round-trip
-    } finally {
-      setIsManualRefreshing(false);
-    }
+    setIsRefreshing(true);
+    await refetch();
+    setTimeout(() => setIsRefreshing(false), 500);
   };
 
-  const handleCreateMission = (opp: Opportunity) => {
-    navigate('/planner', { state: { opportunity: opp } });
+  const handleLaunch = (opp: Opportunity) => {
+    // Navigate to Mission Planner, pre-filling the natural language input
+    navigate('/planner', { 
+      state: { 
+        prompt: `Create a mission for: ${opp.title}. Target audience size is ${opp.audience}. Expected revenue is ${opp.potentialRevenue}.` 
+      } 
+    });
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-primary-blue animate-pulse font-medium">Analyzing growth opportunities...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
-        Failed to load opportunities. Ensure the CRM Backend is running.
-      </div>
-    );
-  }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header row */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
+    <div className="max-w-6xl mx-auto pb-12 animate-fadeIn">
+      <div className="flex flex-col items-center justify-center mb-8 gap-4 relative text-center">
+        <div>
           <h1 className="text-3xl font-bold text-text-primary tracking-tight">Opportunity Center</h1>
+          <p className="text-gray-600 mt-2">AI-identified growth segments based on your live CRM data.</p>
+        </div>
+        <div className="md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2 mt-4 md:mt-0">
           <button
             onClick={handleRefresh}
-            disabled={isManualRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-border-default rounded-md hover:bg-surface-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-white border border-border-default hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isManualRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh Insights
           </button>
         </div>
-        <p className="text-gray-600 mt-2">Here are the best actions you can take right now to grow revenue.</p>
-        <p className="text-xs text-gray-400 mt-1">Last updated {timeAgo}</p>
       </div>
 
-      <div key={refreshVersion} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fadeIn">
-        {opportunities?.map((opp) => (
-          <div key={opp.id} className="bg-surface-bg border border-border-default rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <div className="p-6 border-b border-border-default">
-              <h3 className="text-lg font-semibold text-text-primary mb-4">{opp.title}</h3>
-
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white border border-border-default rounded-xl p-6 h-64 animate-pulse">
+              <div className="w-2/3 h-6 bg-gray-200 rounded mb-4"></div>
+              <div className="w-1/2 h-8 bg-gray-200 rounded mb-6"></div>
+              <div className="space-y-2">
+                <div className="w-full h-4 bg-gray-200 rounded"></div>
+                <div className="w-5/6 h-4 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (Array.isArray(opportunities) ? opportunities.length === 0 : !opportunities) ? (
+        <div className="text-center py-12 bg-white border border-border-default rounded-xl">
+          <p className="text-gray-500 font-medium">No opportunities found.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(Array.isArray(opportunities) ? opportunities : []).map((opp, idx) => (
+            <div key={`${opp.id}-${idx}`} className="bg-white border border-border-default rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col animate-fadeIn">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="font-bold text-gray-900 text-lg leading-tight">{opp.title}</h3>
+                <div className="bg-green-50 text-green-700 px-2 py-1 rounded text-xs font-bold border border-green-100 whitespace-nowrap">
+                  {Math.round(opp.confidence <= 1 ? opp.confidence * 100 : opp.confidence)}% Match
+                </div>
+              </div>
+              
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-surface-secondary p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 font-medium mb-1 uppercase">Audience</div>
-                  <div className="text-xl font-bold text-text-primary flex items-center">
-                    <Users className="w-4 h-4 mr-1.5 text-primary-blue" />
-                    {opp.audience.toLocaleString()}
-                  </div>
+                <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                  <div className="text-gray-500 text-xs font-medium mb-1 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Audience</div>
+                  <div className="font-bold text-gray-900">{opp.audience.toLocaleString()}</div>
                 </div>
-                <div className="bg-surface-secondary p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 font-medium mb-1 uppercase">Est. Revenue</div>
-                  <div className="text-xl font-bold text-green-600 flex items-center">
-                    <TrendingUp className="w-4 h-4 mr-1.5" />
-                    {formatINR(opp.potentialRevenue)}
-                  </div>
+                <div className="bg-green-50 rounded-lg p-3 border border-green-100">
+                  <div className="text-green-800 text-xs font-medium mb-1 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> Est. Revenue</div>
+                  <div className="font-bold text-green-700">{formatINR(opp.potentialRevenue)}</div>
                 </div>
               </div>
 
-              <div className="mb-2">
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="font-medium text-gray-700">Success Probability</span>
-                  <span className="font-bold text-primary-blue">{opp.confidence}%</span>
-                </div>
-                <div className="w-full bg-surface-secondary rounded-full h-2">
-                  <div
-                    className="bg-primary-blue h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${opp.confidence}%` }}
-                  />
-                </div>
+              <div className="mb-6 flex-1">
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" /> Why this works
+                </h4>
+                <ul className="space-y-1.5">
+                  {opp.reasoning.map((reason, i) => (
+                    <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary-blue flex-shrink-0 mt-0.5" />
+                      <span className="leading-snug">{reason}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+              <button
+                onClick={() => handleLaunch(opp)}
+                className="w-full mt-auto flex items-center justify-center gap-2 bg-primary-blue hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors"
+              >
+                Launch Mission <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
-
-            <div className="p-6 flex-1 flex flex-col bg-gray-50/50">
-              <div className="text-sm font-medium text-gray-700 mb-3">Why this opportunity?</div>
-              <ul className="space-y-2 mb-6 flex-1">
-                {opp.reasoning.map((reason, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-gray-600">
-                    <CheckCircle2 className="w-4 h-4 mr-2 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>{reason}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="pt-4 border-t border-border-default">
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Recommended Action</div>
-                <button
-                  onClick={() => handleCreateMission(opp)}
-                  className="w-full flex items-center justify-between bg-primary-blue hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                >
-                  <span>{opp.action}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
