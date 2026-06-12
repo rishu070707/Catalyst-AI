@@ -17,7 +17,7 @@ app.get('/health', (req, res) => {
 
 app.post('/api/receipt', async (req, res) => {
   const payload = req.body as ReceiptPayload;
-  
+
   if (!payload || !payload.idempotencyKey || !payload.missionId || !payload.customerId || !payload.status) {
     return res.status(400).json({ success: false, message: 'Missing required payload fields' });
   }
