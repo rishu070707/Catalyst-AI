@@ -142,6 +142,7 @@ export default function MissionDetail() {
         throw e;
       }
     },
+    refetchInterval: 1500
   });
 
   const { data: autopsyRaw, isLoading: loadingAutopsy } = useQuery({
@@ -313,9 +314,7 @@ export default function MissionDetail() {
                 <span className="text-xs font-semibold text-gray-500 w-20">{step.label}</span>
                 <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden relative">
                   {(mission?.status?.toLowerCase() === 'running' && step.value === 0) ? (
-                    <div className="absolute inset-0 w-full h-full opacity-50">
-                      <div className={`h-full w-1/3 rounded-full animate-indeterminate ${step.color}`} />
-                    </div>
+                    <div className={`absolute inset-0 w-full h-full opacity-40 animate-pulse ${step.color}`} />
                   ) : (
                     <div
                       className={`h-full rounded-full transition-all duration-1000 ${step.color}`}
