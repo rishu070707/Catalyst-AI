@@ -127,7 +127,7 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
   });
 }
 
-app.listen(SIMULATOR_PORT, () => {
+app.listen(SIMULATOR_PORT as number, '0.0.0.0', () => {
   console.log(`Messaging Simulator running on port ${SIMULATOR_PORT}`);
   console.log(`Targeting CRM Webhook: ${CRM_WEBHOOK_URL}`);
 });

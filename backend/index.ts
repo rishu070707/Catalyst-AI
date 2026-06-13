@@ -998,6 +998,6 @@ DO NOT use unsupported Prisma operations.`;
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT as number, '0.0.0.0', () => {
   console.log(`CRM Backend running on port ${PORT}`);
 });
