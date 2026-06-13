@@ -22,7 +22,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/opportunities" replace />} />
+            <Route index element={<OpportunityCenter />} />
             <Route path="planner" element={<MissionPlanner />} />
             <Route path="missions" element={<Missions />} />
             <Route path="missions/:id" element={<MissionDetail />} />
