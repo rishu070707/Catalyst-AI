@@ -378,6 +378,33 @@ export default function MissionPlanner() {
                   </div>
                 </div>
               );
+            })() : plan.recommended_channel === 'rcs' && plan.message_preview?.includes('Headline:') ? (() => {
+              const sections: Record<string, string> = {};
+              plan.message_preview.split('\n\n').forEach(block => {
+                const colon = block.indexOf(':');
+                if (colon !== -1) {
+                  const key = block.slice(0, colon).trim().toLowerCase();
+                  sections[key] = block.slice(colon + 1).trim();
+                }
+              });
+              return (
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-3 border-b border-gray-200">
+                    <span className="text-[10px] font-bold text-purple-500 uppercase tracking-wider block mb-1">RCS Card</span>
+                    <span className="text-sm font-bold text-gray-900">{renderWithVars(sections['headline'] || '')}</span>
+                  </div>
+                  <div className="p-4 bg-gray-50 text-xs text-gray-800 leading-relaxed">
+                    {renderWithVars(sections['body'] || '')}
+                  </div>
+                  {sections['cta'] && (
+                    <div className="px-4 pb-4">
+                      <span className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-xs font-bold rounded-lg">
+                        {renderWithVars(sections['cta'])}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
             })() : (
               <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-black leading-relaxed">
                 {renderWithVars(plan.message_preview)}
