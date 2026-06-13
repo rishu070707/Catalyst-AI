@@ -208,19 +208,30 @@ app.post('/api/ai/plan-mission', async (req, res) => {
     const systemPrompt = `You are Catalyst-AI, an expert retail growth manager. 
 Generate a detailed campaign plan based on the user's objective.
 IMPORTANT CONTEXT: The database currently has exactly ${totalCustomers} total customers. Your predicted_reach MUST NOT exceed ${totalCustomers}.
+LANGUAGE RULE: ALL text fields in your response MUST be written in English only. Do NOT use any other language — not Spanish, Hindi, French, or any other. Every single string value must be in English.
+VARIABLE RULE: In the "message_preview" field, use ONLY these exact variable placeholders for personalization (do NOT use [Name] or similar — always use double curly braces):
+  {{customer_name}} — recipient's first name
+  {{offer_details}} — the specific offer/discount
+  {{brand_name}} — the store/brand name
+  {{expiry_date}} — offer expiry date
+  {{shop_link}} — link to shop
+  {{loyalty_points}} — customer's loyalty points (if relevant)
+MESSAGE FORMAT RULE: For the "message_preview" field:
+  - If recommended_channel is "email": write "Subject: <subject line>\\n\\n<full email body with greeting using {{customer_name}}, offer details, and CTA>"
+  - If recommended_channel is "whatsapp" or "sms": write a concise personalized message using {{customer_name}} and relevant variables (max 160 chars for sms, 300 for whatsapp)
 Return ONLY a raw JSON object (no markdown formatting) with this EXACT schema:
 {
-  "mission_name": "string (catchy campaign name)",
-  "target_audience": "string (detailed description of the segment)",
+  "mission_name": "string (catchy campaign name, in English)",
+  "target_audience": "string (detailed description of the segment, in English)",
   "recommended_channel": "string (one of: whatsapp, email, sms)",
-  "channel_reasoning": "string (why this channel is best)",
-  "offer_suggestion": "string (the promotion or incentive)",
+  "channel_reasoning": "string (why this channel is best, in English)",
+  "offer_suggestion": "string (the promotion or incentive, in English)",
   "predicted_reach": number (estimated audience size, MUST be <= ${totalCustomers}),
   "predicted_revenue": number (estimated revenue in INR, e.g. 150000),
   "predicted_conversions": number (estimated conversions, e.g. 250),
   "confidence_score": number (Calculate a HIGHLY DYNAMIC AND REALISTIC confidence percentage between 50 and 99. Critically evaluate the segment size and channel. Do NOT default to 85 or 87. It MUST vary heavily based on the exact inputs),
-  "ai_reasoning": "string (overall rationale for the strategy)",
-  "message_preview": "string (copywriting for the message)"
+  "ai_reasoning": "string (overall rationale for the strategy, in English)",
+  "message_preview": "string (follow MESSAGE FORMAT RULE and VARIABLE RULE above, in English only)"
 }`;
 
     const randomSeed = Math.floor(Math.random() * 1000);

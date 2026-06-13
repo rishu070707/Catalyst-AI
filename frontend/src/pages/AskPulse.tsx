@@ -41,21 +41,21 @@ const AskPulse = () => {
 
   if (!activeSearch) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex flex-col items-center justify-center animate-fadeIn px-4">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-6 shadow-inner">
-            <Search className="w-8 h-8 text-blue-600" />
+      <div className="flex flex-col items-center justify-start pt-12 sm:justify-center sm:pt-0 min-h-[calc(100vh-8rem)] animate-fadeIn px-4">
+        <div className="text-center mb-8 w-full">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-2xl mb-4 shadow-inner">
+            <Search className="w-6 h-6 text-blue-600" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-3 text-center">
             CATALYST <span className="text-blue-600">Search</span>
           </h1>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-500 max-w-md mx-auto leading-relaxed">
             The intelligent search engine for your CRM. Ask questions about growth strategies, customer metrics, or anything else.
           </p>
         </div>
 
         <div className="w-full max-w-2xl relative group">
-          <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
           </div>
           <input
@@ -63,29 +63,29 @@ const AskPulse = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search CRM data, e.g. 'How do I reduce churn for VIPs?'"
-            className="block w-full pl-14 pr-16 py-4 bg-white border border-gray-200 rounded-full text-lg shadow-sm focus:ring-4 focus:ring-blue-50 focus:border-blue-400 transition-all outline-none"
+            placeholder="Ask anything about your CRM..."
+            className="block w-full pl-11 pr-14 py-3.5 bg-white border border-gray-200 rounded-full text-base shadow-sm focus:ring-4 focus:ring-blue-50 focus:border-blue-400 transition-all outline-none"
           />
           <button
             onClick={() => handleSearch(query)}
             disabled={!query.trim()}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-2.5 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-2.5 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="mt-12 w-full max-w-3xl">
-          <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 text-center">Suggested Categories</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="mt-8 w-full max-w-3xl">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 text-center">Suggested Categories</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {CATEGORIES.map((cat, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSearch(cat.prompt)}
                 className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group"
               >
-                <cat.icon className="w-6 h-6 text-gray-400 group-hover:text-blue-500 mb-2 transition-colors" />
-                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 text-center">{cat.label}</span>
+                <cat.icon className="w-5 h-5 text-gray-400 group-hover:text-blue-500 mb-2 transition-colors" />
+                <span className="text-xs font-medium text-gray-700 group-hover:text-blue-700 text-center">{cat.label}</span>
               </button>
             ))}
           </div>

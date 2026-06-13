@@ -63,6 +63,7 @@ const Layout = () => {
           >
             <Menu size={24} />
           </button>
+          <span className="md:hidden ml-2 text-lg font-bold text-primary-blue tracking-tight">CATALYST</span>
         </header>
         <div className="flex-1 p-4 md:p-8 overflow-y-auto w-full">
           <Outlet />

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { Sparkles, Send, Zap, Users, TrendingUp, MessageSquare, Loader2, RefreshCw, Tag, ShoppingCart, Megaphone, GitBranch, Save } from 'lucide-react';
@@ -71,6 +71,19 @@ const channelColors: Record<string, string> = {
   push: '#8B5CF6',
   rcs: '#EC4899',
 };
+
+/** Splits text on {{variable}} tokens and renders each variable as a styled blue badge */
+function renderWithVars(text: string): React.ReactNode {
+  if (!text) return null;
+  const parts = text.split(/({{[^}]+}})/g);
+  return parts.map((part, i) =>
+    /^{{[^}]+}}$/.test(part) ? (
+      <span key={i} className="inline-flex items-center px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-mono text-[10px] font-bold mx-0.5 border border-blue-200">
+        {part}
+      </span>
+    ) : part
+  );
+}
 
 export default function MissionPlanner() {
   const navigate = useNavigate();
@@ -156,7 +169,7 @@ export default function MissionPlanner() {
   const chColor = plan ? channelColors[plan.recommended_channel] || '#2563EB' : '#2563EB';
 
   return (
-    <div className="p-6 max-w-5xl mx-auto page-enter min-h-[calc(100vh-100px)] flex flex-col">
+    <div className="max-w-5xl mx-auto page-enter min-h-[calc(100vh-100px)] flex flex-col">
       {/* Header */}
       {!plan && !planMutation.isPending && (
         <div className="mb-10 text-center">
@@ -173,21 +186,21 @@ export default function MissionPlanner() {
 
       {/* Input Area */}
       <div className={`max-w-4xl mx-auto w-full transition-all duration-500 ${plan || planMutation.isPending ? 'mb-6' : 'mb-10'}`}>
-        <div className="relative flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-300 transition-colors focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
-          <div className="pl-4 pr-3 text-blue-600">
+        <div className="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-300 transition-colors focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 min-w-0">
+          <div className="pl-4 pr-3 text-blue-600 shrink-0">
             <Sparkles size={20} />
           </div>
           <input
             type="text"
-            className="flex-1 bg-transparent py-4 outline-none text-gray-900 placeholder-gray-400 text-sm"
-            placeholder="Increase reactivation rate among high-value customers who haven't purchased in 90 d"
+            className="flex-1 min-w-0 bg-transparent py-4 outline-none text-gray-900 placeholder-gray-400 text-sm"
+            placeholder="Describe your goal..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSubmit();
             }}
           />
-          <div className="pr-2">
+          <div className="pr-2 shrink-0">
             <button
               onClick={handleSubmit}
               disabled={!prompt.trim() || planMutation.isPending}
@@ -348,11 +361,28 @@ export default function MissionPlanner() {
           {/* Message Preview */}
           <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
             <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-3">Personalized Message Preview</span>
-            <div
-              className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-black leading-relaxed"
-            >
-              {plan.message_preview}
-            </div>
+            {plan.recommended_channel === 'email' && plan.message_preview?.includes('Subject:') ? (() => {
+              const [subjectLine, ...bodyParts] = plan.message_preview.split('\n\n');
+              const subject = subjectLine.replace(/^Subject:\s*/i, '');
+              const body = bodyParts.join('\n\n');
+              return (
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-100 px-4 py-2.5 border-b border-gray-200 flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider shrink-0">Subject</span>
+                    <span className="text-xs font-semibold text-gray-900">{renderWithVars(subject)}</span>
+                  </div>
+                  <div className="p-4 bg-gray-50 text-xs text-gray-800 leading-relaxed font-sans">
+                    {body.split('\n').map((line, i) => (
+                      <p key={i} className={line === '' ? 'mb-2' : 'mb-0'}>{renderWithVars(line)}</p>
+                    ))}
+                  </div>
+                </div>
+              );
+            })() : (
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-black leading-relaxed">
+                {renderWithVars(plan.message_preview)}
+              </div>
+            )}
           </div>
 
           {/* Launch Buttons */}
