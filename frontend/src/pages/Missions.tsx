@@ -272,42 +272,40 @@ export default function Missions() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="p-4 md:p-8 max-w-[1400px] mx-auto space-y-6 md:space-y-8 page-enter bg-[#fcfcfc] min-h-[calc(100vh-64px)]">
+    <div className="space-y-4 pb-8 page-enter">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-8 gap-4 text-center md:text-left">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-1">Mission Control</h2>
-          <p className="text-xs md:text-sm text-gray-500 font-medium">
-            {missions.length} total growth missions registered · {counts['running'] || 0} currently active
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Mission Control</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {missions.length} total · {counts['running'] || 0} active
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-2 md:mt-0 w-full md:w-auto">
+        <div className="flex gap-2">
           <button
             onClick={async () => {
               const btn = document.getElementById('refresh-btn');
               if (btn) btn.classList.add('animate-pulse', 'text-blue-600', 'border-blue-200', 'bg-blue-50');
               const icon = document.getElementById('refresh-icon');
               if (icon) icon.classList.add('animate-spin', 'text-blue-600');
-              
               await refetch();
-              
               setTimeout(() => {
                 if (btn) btn.classList.remove('animate-pulse', 'text-blue-600', 'border-blue-200', 'bg-blue-50');
                 if (icon) icon.classList.remove('animate-spin', 'text-blue-600');
               }, 500);
             }}
             id="refresh-btn"
-            className="flex-1 md:flex-none justify-center bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center gap-2 shadow-sm"
+            className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-3 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 shadow-sm"
           >
-            <RefreshCw id="refresh-icon" size={16} className="text-gray-400 transition-colors duration-300" />
-            Refresh
+            <RefreshCw id="refresh-icon" size={16} className="text-gray-400" />
+            <span className="hidden sm:inline">Refresh</span>
           </button>
           <button
             onClick={() => navigate('/planner')}
-            className="flex-1 md:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2 shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2 shadow-sm"
           >
             <Plus size={16} />
-            Create Mission
+            <span>Create</span>
           </button>
         </div>
       </div>
