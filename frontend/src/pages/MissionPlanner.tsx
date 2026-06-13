@@ -281,7 +281,7 @@ export default function MissionPlanner() {
                 <p className="text-gray-500 text-xs mt-0.5">{plan.goal}</p>
               </div>
               <div className="text-right">
-                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Model Confidence</span>
+                <span className="text-[10px] uppercase font-bold text-black tracking-wider">Model Confidence</span>
                 <div className="text-2xl font-bold font-mono text-blue-600">{plan.confidence_score}%</div>
               </div>
             </div>
@@ -290,13 +290,13 @@ export default function MissionPlanner() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Target Audience */}
             <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target Audience</span>
-              <p className="text-xs text-gray-700 mt-2 leading-relaxed">{plan.target_audience}</p>
+              <span className="text-[10px] font-bold text-black uppercase tracking-wider">Target Audience</span>
+              <p className="text-xs text-black mt-2 leading-relaxed">{plan.target_audience}</p>
             </div>
 
             {/* Channel */}
             <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Recommended Channel</span>
+              <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-2">Recommended Channel</span>
               <div
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
                 style={{ background: `${chColor}10`, color: chColor, border: `1px solid ${chColor}20` }}
@@ -304,18 +304,18 @@ export default function MissionPlanner() {
                 <MessageSquare size={12} />
                 {plan.recommended_channel}
               </div>
-              <p className="text-xs text-gray-500 mt-3 leading-relaxed">{plan.channel_reasoning}</p>
+              <p className="text-xs text-black mt-3 leading-relaxed">{plan.channel_reasoning}</p>
             </div>
 
             {/* Offer */}
             <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Offer Strategy</span>
-              <p className="text-xs text-gray-700 mt-2 leading-relaxed">{plan.offer_suggestion}</p>
+              <span className="text-[10px] font-bold text-black uppercase tracking-wider">Offer Strategy</span>
+              <p className="text-xs text-black mt-2 leading-relaxed">{plan.offer_suggestion}</p>
             </div>
 
             {/* Impact Metrics */}
             <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-3">Predicted Impact</span>
+              <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-3">Predicted Impact</span>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'Reach', value: plan.predicted_reach.toLocaleString('en-IN'), color: '#2563EB' },
@@ -324,7 +324,7 @@ export default function MissionPlanner() {
                 ].map((m) => (
                   <div key={m.label} className="text-center p-3 bg-gray-50 border border-gray-100 rounded-lg">
                     <div className="text-sm font-bold font-mono" style={{ color: m.color }}>{m.value}</div>
-                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">{m.label}</div>
+                    <div className="text-[10px] text-black font-bold uppercase tracking-wider mt-1">{m.label}</div>
                   </div>
                 ))}
               </div>
@@ -347,9 +347,9 @@ export default function MissionPlanner() {
 
           {/* Message Preview */}
           <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-3">Personalized Message Preview</span>
+            <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-3">Personalized Message Preview</span>
             <div
-              className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-gray-700 leading-relaxed"
+              className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-black leading-relaxed"
             >
               {plan.message_preview}
             </div>

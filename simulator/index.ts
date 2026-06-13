@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL || 'http://localhost:3000/api/receipt';
-const SIMULATOR_PORT = process.env.PORT || 4000;
+const SIMULATOR_PORT = process.env.SIMULATOR_PORT || 4000;
 
 // Helper to simulate delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

@@ -44,6 +44,7 @@ model Mission {
   audienceCount   Int      @default(0)
   expectedRevenue Float    @default(0)
   actualRevenue   Float    @default(0)
+  confidenceScore Int      @default(85)
   offer           String?
   channel         String?
   messageVariants String?  // Stored as JSON string (SQLite limitation)
@@ -66,4 +67,16 @@ model CommunicationEvent {
 
   mission  Mission  @relation(fields: [missionId], references: [id])
   customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model Segment {
+  id             String   @id @default(uuid())
+  name           String
+  description    String?
+  segment_type   String   @default("nl_query")
+  nl_query       String?
+  filters        String?  // Stored as JSON string
+  customer_count Int      @default(0)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 }

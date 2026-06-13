@@ -73,13 +73,13 @@ const OpportunityCenter = () => {
             </div>
           ))}
         </div>
-      ) : (Array.isArray(opportunities) ? opportunities.length === 0 : !opportunities) ? (
+      ) : (Array.isArray(opportunities) ? opportunities.filter(o => o.audience > 0) : []).length === 0 ? (
         <div className="text-center py-12 bg-white border border-border-default rounded-xl">
           <p className="text-gray-500 font-medium">No opportunities found.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(Array.isArray(opportunities) ? opportunities : []).map((opp, idx) => (
+          {(Array.isArray(opportunities) ? opportunities.filter(o => o.audience > 0) : []).map((opp, idx) => (
             <div key={`${opp.id}-${idx}`} className="bg-white border border-border-default rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col animate-fadeIn">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="font-bold text-gray-900 text-lg leading-tight">{opp.title}</h3>

@@ -61,9 +61,15 @@ async function main() {
     
     const lastPurchaseDate = randomDate(lastPurchaseStart, lastPurchaseEnd);
 
+    const FIRST_NAMES = ['Aarav', 'Vihaan', 'Aditya', 'Sai', 'Arjun', 'Siddharth', 'Rohan', 'Rishabh', 'Aanya', 'Diya', 'Kavya', 'Priya', 'Riya', 'Neha', 'Pooja', 'Anjali', 'Karan', 'Vikram', 'Raj', 'Rahul', 'Sneha', 'Shruti', 'Ananya', 'Kriti', 'Ishaan'];
+    const LAST_NAMES = ['Sharma', 'Verma', 'Gupta', 'Patel', 'Singh', 'Kumar', 'Shah', 'Deshmukh', 'Joshi', 'Kapoor', 'Malhotra', 'Reddy', 'Rao', 'Iyer', 'Nair', 'Mehta', 'Chauhan', 'Agarwal'];
+
+    const firstName = randomItem(FIRST_NAMES);
+    const lastName = randomItem(LAST_NAMES);
+
     customers.push({
       id: `cust_${i}`,
-      name: `Customer ${i}`,
+      name: `${firstName} ${lastName}`,
       email: `customer${i}@example.com`,
       phone: `+9198${String(randomRange(10000000, 99999999))}`,
       city: randomItem(CITIES),

@@ -83,7 +83,7 @@ export default function Segments() {
     onSuccess: (data) => {
       setDiscoveredSegment(data);
       setSaveName(`AI Segment: ${nlQuery.slice(0, 20)}...`);
-      setSaveDescription(`Generated via AI from prompt: "${nlQuery}"`);
+      setSaveDescription(nlQuery);
     },
   });
 
