@@ -311,11 +311,17 @@ export default function MissionDetail() {
             ].map((step) => (
               <div key={step.label} className="flex items-center gap-3">
                 <span className="text-xs font-semibold text-gray-500 w-20">{step.label}</span>
-                <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-1000 ${step.color}`}
-                    style={{ width: `${step.value}%` }}
-                  />
+                <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden relative">
+                  {(mission?.status?.toLowerCase() === 'running' && step.value === 0) ? (
+                    <div className="absolute inset-0 w-full h-full opacity-50">
+                      <div className={`h-full w-1/3 rounded-full animate-indeterminate ${step.color}`} />
+                    </div>
+                  ) : (
+                    <div
+                      className={`h-full rounded-full transition-all duration-1000 ${step.color}`}
+                      style={{ width: `${step.value}%` }}
+                    />
+                  )}
                 </div>
                 <span className={`text-xs font-bold font-mono ${step.text} w-10 text-right`}>
                   {step.value}%
