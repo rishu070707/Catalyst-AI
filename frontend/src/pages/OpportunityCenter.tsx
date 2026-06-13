@@ -21,7 +21,8 @@ const OpportunityCenter = () => {
   const { data: opportunities, isLoading, refetch } = useQuery({
     queryKey: ['opportunities'],
     queryFn: async () => {
-      const response = await axios.get<Opportunity[]>('/api/opportunities');
+      // Pass force=true if we're actively refreshing
+      const response = await axios.get<Opportunity[]>(`/api/opportunities${isRefreshing ? '?force=true' : ''}`);
       return response.data;
     },
     staleTime: 0,
@@ -29,8 +30,11 @@ const OpportunityCenter = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await refetch();
-    setTimeout(() => setIsRefreshing(false), 500);
+    // Force a re-render so isRefreshing is true when refetch calls queryFn
+    setTimeout(async () => {
+      await refetch();
+      setIsRefreshing(false);
+    }, 0);
   };
 
   const handleLaunch = (opp: Opportunity) => {

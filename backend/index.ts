@@ -101,7 +101,9 @@ const OPPORTUNITIES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 app.get('/api/opportunities', async (req, res) => {
   try {
-    if (cachedOpportunities && (Date.now() - lastOpportunitiesFetchTime < OPPORTUNITIES_CACHE_TTL)) {
+    const forceRefresh = req.query.force === 'true';
+
+    if (!forceRefresh && cachedOpportunities && (Date.now() - lastOpportunitiesFetchTime < OPPORTUNITIES_CACHE_TTL)) {
       return res.json(cachedOpportunities);
     }
 
