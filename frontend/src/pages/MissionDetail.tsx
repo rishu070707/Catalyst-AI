@@ -173,7 +173,7 @@ export default function MissionDetail() {
   });
 
   const mission: Mission | undefined = missionRaw?.mission || missionRaw;
-  const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || (mission?.status === 'completed' ? MOCK_AUTOPSY : null);
+  const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || ((mission?.status === 'completed' || mission?.status?.toLowerCase() === 'running') ? MOCK_AUTOPSY : null);
 
   const toastShown = useRef(false);
   const prevStatusRef = useRef<string | null>(null);

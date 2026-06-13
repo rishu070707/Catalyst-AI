@@ -167,24 +167,7 @@ export default function Segments() {
               </button>
             </form>
 
-            {/* Suggested prompts chips */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {[
-                "VIP customers with churn risk score above 50%",
-                "Loyalty members who haven't ordered in 90 days",
-                "Customers in Mumbai with high LTV",
-                "New customers with 3+ orders",
-              ].map((chip) => (
-                <button
-                  key={chip}
-                  type="button"
-                  onClick={() => setNlQuery(chip)}
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-gray-900 transition-all"
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
+
 
             {/* Discovery Results Panel */}
             {discoveredSegment && (
