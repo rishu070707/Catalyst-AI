@@ -95,8 +95,16 @@ app.post('/api/receipt', async (req, res) => {
   }
 });
 
+let cachedOpportunities: any = null;
+let lastOpportunitiesFetchTime = 0;
+const OPPORTUNITIES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 app.get('/api/opportunities', async (req, res) => {
   try {
+    if (cachedOpportunities && (Date.now() - lastOpportunitiesFetchTime < OPPORTUNITIES_CACHE_TTL)) {
+      return res.json(cachedOpportunities);
+    }
+
     // 1. Dormant Customers
     const sixtyDaysAgo = new Date();
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
@@ -188,9 +196,18 @@ Return ONLY a raw JSON object (no markdown) with this EXACT schema:
 
     const content = chatCompletion.choices[0]?.message?.content;
     const parsed = JSON.parse(content || '{"opportunities":[]}');
-    res.json(Array.isArray(parsed) ? parsed : (parsed.opportunities || []));
+    const result = Array.isArray(parsed) ? parsed : (parsed.opportunities || []);
+    
+    cachedOpportunities = result;
+    lastOpportunitiesFetchTime = Date.now();
+    
+    res.json(result);
   } catch (error: any) {
     console.error('Error fetching opportunities:', error);
+    // Return cached even if expired, if we have it
+    if (cachedOpportunities) {
+      return res.json(cachedOpportunities);
+    }
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -1044,4 +1061,13 @@ DO NOT use unsupported Prisma operations.`;
 
 app.listen(PORT as number, '0.0.0.0', () => {
   console.log(`CRM Backend running on port ${PORT}`);
+  
+  // Seed the Opportunity Center cache asynchronously on startup
+  // so the very first page load for the user is also lightning fast (< 0.33s)
+  setTimeout(() => {
+    console.log('[Cache] Pre-warming opportunities cache in background...');
+    axios.get(`http://127.0.0.1:${PORT}/api/opportunities`).catch(err => {
+      console.warn('[Cache] Could not pre-warm opportunities:', err.message);
+    });
+  }, 3000);
 });
