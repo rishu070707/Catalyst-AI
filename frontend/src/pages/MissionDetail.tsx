@@ -179,8 +179,8 @@ export default function MissionDetail() {
   useEffect(() => {
     if (mission && mission.status?.toLowerCase() === 'running') {
       const funnel = (mission as any).funnel || {};
-      const sent = funnel.sent || 0;
-      if (sent === 0 && !toastShown.current) {
+      const delivered = funnel.delivered || 0;
+      if (delivered === 0 && !toastShown.current) {
         toast.info("Mission launched! Wait a few moments for the simulator to begin processing and stats will update live.", {
           position: "top-center",
           autoClose: 8000,
