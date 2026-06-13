@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Search, MapPin, Mail, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';

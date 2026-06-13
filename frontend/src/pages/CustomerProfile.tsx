@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { 
+  ArrowLeft, MapPin, Calendar, Mail, Phone, ShoppingBag,
   Sparkles, Zap, AlertTriangle, CheckCircle2,
   Database, RefreshCw, Layers, TrendingUp
 } from 'lucide-react';
