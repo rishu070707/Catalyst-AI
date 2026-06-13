@@ -188,7 +188,7 @@ Return ONLY a raw JSON object (no markdown) with this EXACT schema:
 
     const content = chatCompletion.choices[0]?.message?.content;
     const parsed = JSON.parse(content || '{"opportunities":[]}');
-    res.json(parsed.opportunities);
+    res.json(Array.isArray(parsed) ? parsed : (parsed.opportunities || []));
   } catch (error: any) {
     console.error('Error fetching opportunities:', error);
     res.status(500).json({ error: 'Internal server error' });

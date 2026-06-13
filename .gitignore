@@ -34,3 +34,8 @@ Thumbs.db
 
 # Typescript
 *.tsbuildinfo
+
+# Database files
+*.db
+*.sqlite
+dev.db
