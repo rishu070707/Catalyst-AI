@@ -677,18 +677,34 @@ app.post('/api/missions/:id/launch', async (req, res) => {
            const batch = customers.slice(current, current + batchSize);
            
            for(const customer of batch) {
-             try {
-               const simulatorUrl = process.env.SIMULATOR_URL || 'http://localhost:4000';
-               await axios.post(`${simulatorUrl}/send`, {
-                 recipient: customer.phone || customer.email || '12345',
-                 message: mission.offer || 'Exclusive offer inside!',
-                 channel: mission.channel || 'whatsapp',
-                 missionId: id,
-                 customerId: customer.id
-               });
-             } catch (postErr) {
-               console.error('Simulator POST error:', postErr);
+             // Retry up to 4 times with backoff – handles Render free-tier cold starts (502s)
+             const simulatorUrl = process.env.SIMULATOR_URL || 'http://localhost:4000';
+             let sent = false;
+             for (let attempt = 1; attempt <= 4; attempt++) {
+               try {
+                 await axios.post(`${simulatorUrl}/send`, {
+                   recipient: customer.phone || customer.email || '12345',
+                   message: mission.offer || 'Exclusive offer inside!',
+                   channel: mission.channel || 'whatsapp',
+                   missionId: id,
+                   customerId: customer.id
+                 }, { timeout: 10000 });
+                 sent = true;
+                 break;
+               } catch (postErr: any) {
+                 const status = postErr?.response?.status;
+                 if ((status === 502 || status === 503 || status === 504 || !status) && attempt < 4) {
+                   // Simulator is waking up – wait and retry
+                   const waitMs = attempt * 3000;
+                   console.log(`[Simulator] Attempt ${attempt} got ${status || 'network error'}, retrying in ${waitMs}ms...`);
+                   await new Promise(r => setTimeout(r, waitMs));
+                 } else {
+                   console.error(`[Simulator] Failed after ${attempt} attempt(s):`, postErr.message);
+                   break;
+                 }
+               }
              }
+             if (!sent) console.warn(`[Simulator] Skipped customer ${customer.id} after all retries.`);
            }
            
            current += batchSize;
