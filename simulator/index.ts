@@ -37,15 +37,16 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 // Helper to simulate delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function sendWebhook(payload: ReceiptPayload, retries = 3) {
+async function sendWebhook(payload: ReceiptPayload, retries = 6) {
   for (let i = 0; i < retries; i++) {
     try {
-      await axios.post(CRM_WEBHOOK_URL, payload, { timeout: 10000 });
+      await axios.post(CRM_WEBHOOK_URL, payload, { timeout: 15000 });
       console.log(`[Webhook OK] ${payload.status} → Mission ${payload.missionId}, Customer ${payload.customerId}`);
       return;
     } catch (err: any) {
-      console.error(`[Webhook Fail] Attempt ${i + 1}/${retries} for ${payload.status}:`, err.message);
-      await delay(1000 * (i + 1));
+      const waitMs = (i * 5000) + 5000; // 5s, 10s, 15s, 20s, 25s, 30s
+      console.error(`[Webhook Fail] Attempt ${i + 1}/${retries} for ${payload.status}: ${err.message}. Retrying in ${waitMs}ms...`);
+      await delay(waitMs);
     }
   }
 }
