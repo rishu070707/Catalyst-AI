@@ -1,4 +1,4 @@
-import React from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { toast } from 'react-toastify';
 
 export const confirmToast = (message: string, onConfirm: () => void) => {

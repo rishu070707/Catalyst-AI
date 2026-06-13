@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import React from 'react';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -93,7 +93,7 @@ const MOCK_MISSION: Mission = {
     open_rate: 64,
     click_rate: 28,
   },
-  confidence_score: 74,
+  confidenceScore: 74,
   ai_reasoning: 'VIP customers respond 3x better to exclusive access offers vs generic discounts. Email is preferred channel for this segment.',
   created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
   launched_at: new Date(Date.now() - 86400000 * 6).toISOString(),
@@ -178,7 +178,7 @@ export default function MissionDetail() {
   const funnel = (mission as any).funnel || { sent: 0, delivered: 0, opened: 0, clicked: 0, purchased: 0 };
   
   const m = mission.metrics || {
-    predicted_reach: mission.audienceCount || 0,
+    predicted_reach: (mission as any).audienceCount || 0,
     actual_reach: funnel.sent || 0,
     predicted_revenue: (mission as any).expectedRevenue || 0.0,
     actual_revenue: (mission as any).actualRevenue || 0.0,

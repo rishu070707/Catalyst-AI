@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Target, Users, MessageSquareText, BarChart3, Database, LayoutDashboard, Rocket, Tag, Menu, X } from 'lucide-react';
+import { Target, Users, MessageSquareText, BarChart3, LayoutDashboard, Rocket, Tag, Menu, X } from 'lucide-react';
 
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

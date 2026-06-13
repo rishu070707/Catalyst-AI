@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Search, MapPin, Mail, Phone, Calendar, Activity, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, MapPin, Mail, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatINR } from '../utils/formatINR';
-import { formatDistanceToNow } from 'date-fns';
 
 interface Customer {
   id: string;
@@ -49,7 +48,7 @@ const Customers = () => {
     setPage(1); // Reset to page 1 on search
   };
 
-  const toggleExpand = (id: string) => {
+  const _toggleExpand = (id: string) => {
     setExpandedId(prev => prev === id ? null : id);
   };
 

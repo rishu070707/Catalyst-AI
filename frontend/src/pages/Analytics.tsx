@@ -1,8 +1,7 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { TrendingUp, Users, Target, Activity, Sparkles, CheckCircle2 } from 'lucide-react';
+import { TrendingUp, Target, Activity, Sparkles, CheckCircle2 } from 'lucide-react';
 import { formatINR } from '../utils/formatINR';
 
 interface AnalyticsData {
@@ -109,7 +108,7 @@ const Analytics = () => {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                 <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `₹${val/1000}k`} />
-                <Tooltip formatter={(value: number) => formatINR(value)} labelStyle={{ color: '#374151' }} />
+                <Tooltip formatter={(value: any) => formatINR(value as number)} labelStyle={{ color: '#374151' }} />
                 <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
               </AreaChart>
             </ResponsiveContainer>
@@ -124,7 +123,7 @@ const Analytics = () => {
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
                 <XAxis type="number" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis dataKey="name" type="category" stroke="#4b5563" fontSize={13} fontWeight="500" tickLine={false} axisLine={false} />
-                <Tooltip formatter={(value: number) => value.toLocaleString()} cursor={{ fill: '#f3f4f6' }} />
+                <Tooltip formatter={(value: any) => (value as number).toLocaleString()} cursor={{ fill: '#f3f4f6' }} />
                 <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>

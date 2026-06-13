@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,7 @@ interface Customer {
 }
 
 export default function Segments() {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const queryClient = useQueryClient();
   const [nlQuery, setNlQuery] = useState('');
   const [selectedSegmentId, setSelectedSegmentId] = useState<string | null>(null);

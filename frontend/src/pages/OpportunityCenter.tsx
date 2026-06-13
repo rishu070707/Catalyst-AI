@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { RefreshCw, Users, TrendingUp, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';

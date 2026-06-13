@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { Sparkles, Send, Zap, Users, IndianRupee, TrendingUp, MessageSquare, Loader2, RefreshCw, Tag, ShoppingCart, Megaphone, GitBranch, Save } from 'lucide-react';
+import { Sparkles, Send, Zap, Users, TrendingUp, MessageSquare, Loader2, RefreshCw, Tag, ShoppingCart, Megaphone, GitBranch, Save } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
