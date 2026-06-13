@@ -176,9 +176,23 @@ export default function MissionDetail() {
   const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || (mission?.status === 'completed' ? MOCK_AUTOPSY : null);
 
   const toastShown = useRef(false);
+  const prevStatusRef = useRef<string | null>(null);
   
   useEffect(() => {
-    if (mission && mission.status?.toLowerCase() === 'running') {
+    if (!mission) return;
+
+    const currentStatus = mission.status?.toLowerCase() || null;
+
+    // Detect transition from RUNNING to COMPLETED
+    if (prevStatusRef.current === 'running' && currentStatus === 'completed') {
+      toast.success("Mission successfully completed! Scroll down to view the AI Autopsy and final business outcomes.", {
+        position: "top-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+      });
+    }
+
+    if (currentStatus === 'running') {
       const funnel = (mission as any).funnel || {};
       const delivered = funnel.delivered || 0;
       if (delivered === 0 && !toastShown.current) {
@@ -190,6 +204,8 @@ export default function MissionDetail() {
         toastShown.current = true;
       }
     }
+
+    prevStatusRef.current = currentStatus;
   }, [mission]);
 
   if (loadingMission) return <PageLoader />;

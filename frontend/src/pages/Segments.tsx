@@ -82,7 +82,7 @@ export default function Segments() {
     },
     onSuccess: (data) => {
       setDiscoveredSegment(data);
-      setSaveName(`AI Segment: ${nlQuery.slice(0, 20)}...`);
+      setSaveName(`${nlQuery.slice(0, 30)}${nlQuery.length > 30 ? '...' : ''}`);
       setSaveDescription(nlQuery);
     },
   });
@@ -253,14 +253,13 @@ export default function Segments() {
                   >
                     <div>
                       <div className="flex justify-between items-start">
-                        <h4 className="font-bold text-gray-900 text-sm truncate pr-4">{seg.name}</h4>
+                        <h4 className="font-bold text-gray-900 text-sm truncate pr-4">
+                          {seg.name.replace(/^AI Segment:\s*/i, '')}
+                        </h4>
                         <span className="px-2 py-1 rounded text-xs font-bold font-mono bg-green-50 text-green-700 border border-green-100">
                           {seg.customer_count} Profile{seg.customer_count !== 1 ? 's' : ''}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">
-                        {seg.description}
-                      </p>
                     </div>
 
                     <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-100 text-xs text-gray-400 font-medium">
