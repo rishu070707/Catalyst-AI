@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
+import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ArrowLeft, CheckCircle2, XCircle, Lightbulb, TrendingUp, Users, IndianRupee, MessageSquare, Target } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 // --- INLINED TYPES ---
 interface Mission {
@@ -171,6 +173,23 @@ export default function MissionDetail() {
 
   const mission: Mission | undefined = missionRaw?.mission || missionRaw;
   const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || (mission?.status === 'completed' ? MOCK_AUTOPSY : null);
+
+  const toastShown = useRef(false);
+  
+  useEffect(() => {
+    if (mission && mission.status?.toLowerCase() === 'running') {
+      const funnel = (mission as any).funnel || {};
+      const sent = funnel.sent || 0;
+      if (sent === 0 && !toastShown.current) {
+        toast.info("Mission launched! Wait a few moments for the simulator to begin processing and stats will update live.", {
+          position: "top-center",
+          autoClose: 8000,
+          hideProgressBar: false,
+        });
+        toastShown.current = true;
+      }
+    }
+  }, [mission]);
 
   if (loadingMission) return <PageLoader />;
   if (!mission) return <div className="p-10 text-center text-gray-500">Mission not found</div>;
