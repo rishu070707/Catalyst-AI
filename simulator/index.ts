@@ -2,14 +2,37 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import { randomUUID } from 'crypto';
-import type { CommunicationEvent, EventStatus, ReceiptPayload } from 'shared';
+
+// Inlined types from 'shared' to avoid workspace dependency issues on Render
+type EventStatus = 'SENT' | 'DELIVERED' | 'FAILED' | 'OPENED' | 'READ' | 'CLICKED' | 'PURCHASED';
+
+interface CommunicationEvent {
+  recipient: string;
+  message: string;
+  channel: string;
+  missionId: string;
+  customerId: string;
+}
+
+interface ReceiptPayload {
+  idempotencyKey: string;
+  missionId: string;
+  customerId: string;
+  channel: string;
+  status: EventStatus;
+  timestamp: string;
+}
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL || 'http://localhost:3000/api/receipt';
-const SIMULATOR_PORT = process.env.SIMULATOR_PORT || 4000;
+const SIMULATOR_PORT = process.env.PORT || process.env.SIMULATOR_PORT || 4000;
+
+// Health check so Render knows the service is alive
+app.get('/', (_req, res) => res.json({ status: 'ok', service: 'Catalyst Simulator' }));
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 // Helper to simulate delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -17,12 +40,12 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function sendWebhook(payload: ReceiptPayload, retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
-      await axios.post(CRM_WEBHOOK_URL, payload);
-      console.log(`[Webhook Success] Sent status ${payload.status} for Mission ${payload.missionId}, Customer ${payload.customerId}`);
+      await axios.post(CRM_WEBHOOK_URL, payload, { timeout: 10000 });
+      console.log(`[Webhook OK] ${payload.status} → Mission ${payload.missionId}, Customer ${payload.customerId}`);
       return;
     } catch (err: any) {
-      console.error(`[Webhook Failed] Attempt ${i + 1}/${retries} failed for status ${payload.status}:`, err.message);
-      await delay(1000 * (i + 1)); // Exponential backoff
+      console.error(`[Webhook Fail] Attempt ${i + 1}/${retries} for ${payload.status}:`, err.message);
+      await delay(1000 * (i + 1));
     }
   }
 }
@@ -52,7 +75,6 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
     timestamp: new Date().toISOString()
   });
 
-  // Small delay for processing
   await delay(1000 + Math.random() * 2000);
 
   // 2. DELIVERED / FAILED (95% success rate)
@@ -66,7 +88,7 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
       status: 'FAILED',
       timestamp: new Date().toISOString()
     });
-    return; // Pipeline ends if failed
+    return;
   }
 
   await sendWebhook({
@@ -78,7 +100,6 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
     timestamp: new Date().toISOString()
   });
 
-  // Delay for user to notice
   await delay(2000 + Math.random() * 5000);
 
   // 3. OPENED / READ (60% open rate)
@@ -90,11 +111,10 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
     missionId,
     customerId,
     channel,
-    status: channel === 'Email' ? 'OPENED' : 'READ',
+    status: channel === 'email' ? 'OPENED' : 'READ',
     timestamp: new Date().toISOString()
   });
 
-  // Delay for reading
   await delay(1000 + Math.random() * 3000);
 
   // 4. CLICKED (30% click rate of opened)
@@ -110,7 +130,6 @@ async function simulateLifecycle(missionId: string, customerId: string, channel:
     timestamp: new Date().toISOString()
   });
 
-  // Delay for browsing website
   await delay(3000 + Math.random() * 7000);
 
   // 5. PURCHASED (20% conversion rate of clicked)
