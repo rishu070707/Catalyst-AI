@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -131,6 +131,7 @@ const MOCK_AUTOPSY: MissionAutopsy = {
 export default function MissionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isAutopsyEnabled, setIsAutopsyEnabled] = useState(false);
 
   const { data: missionRaw, isLoading: loadingMission } = useQuery({
     queryKey: ['mission', id],
@@ -155,7 +156,7 @@ export default function MissionDetail() {
         return null;
       }
     },
-    enabled: !!id,
+    enabled: !!id && isAutopsyEnabled,
   });
 
   const { data: eventsRaw } = useQuery({
@@ -173,7 +174,7 @@ export default function MissionDetail() {
   });
 
   const mission: Mission | undefined = missionRaw?.mission || missionRaw;
-  const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || ((mission?.status === 'completed' || mission?.status?.toLowerCase() === 'running') ? MOCK_AUTOPSY : null);
+  const autopsy: MissionAutopsy | null = autopsyRaw?.autopsy || autopsyRaw || ((isAutopsyEnabled && (mission?.status === 'completed' || mission?.status?.toLowerCase() === 'running')) ? MOCK_AUTOPSY : null);
 
   const toastShown = useRef(false);
   const prevStatusRef = useRef<string | null>(null);
@@ -347,8 +348,27 @@ export default function MissionDetail() {
         </div>
       )}
 
+      {/* AI Autopsy / Insights Button */}
+      {(isCompleted || mission.status === 'RUNNING' || mission.status === 'running') && !isAutopsyEnabled && (
+        <div className="bg-white border border-blue-200 rounded-xl p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm">
+          <div className="bg-blue-50 p-3 rounded-full">
+            <Lightbulb size={24} className="text-blue-600" />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Mission Autopsy & Business Outcomes</h3>
+            <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">Generate AI-powered insights, sentiment scores, and ROI calculations based on your campaign's performance.</p>
+          </div>
+          <button 
+            onClick={() => setIsAutopsyEnabled(true)}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
+            Enable Autopsy
+          </button>
+        </div>
+      )}
+
       {/* AI Autopsy / Insights */}
-      {(isCompleted || mission.status === 'RUNNING' || mission.status === 'running') && autopsy && (
+      {isAutopsyEnabled && autopsy && (
         <div className="space-y-4">
           <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>{isCompleted ? 'Mission Autopsy & Business Outcomes' : 'Live AI Insights & Projections'}</span>
