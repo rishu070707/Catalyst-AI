@@ -140,7 +140,7 @@ export default function CustomerProfile() {
       type: 'CDP Ingestion',
       title: 'Stitched Unified Profile Created',
       description: `Customer identified via Shopify email & Loyalty ID. Unified ID: CUST-${customer.id.slice(0,4).toUpperCase()}`,
-      date: joinedDate.toLocaleDateString(),
+      date: joinedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
       icon: <Layers size={14} className="text-blue-600" />,
       color: 'bg-blue-100'
     }
@@ -152,7 +152,7 @@ export default function CustomerProfile() {
       type: 'AI Insights',
       title: `Preferred Channel Resolved: ${customer.preferred_channel}`,
       description: `Determined ${customer.preferred_channel} has a CTR of ${customer.preferred_channel === 'WhatsApp' ? '22%' : '14%'} based on past response metrics.`,
-      date: new Date(joinedDate.getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      date: new Date(joinedDate.getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
       icon: <Sparkles size={14} className="text-amber-600" />,
       color: 'bg-amber-100'
     });
@@ -166,7 +166,7 @@ export default function CustomerProfile() {
         type: 'Campaign Outreach',
         title: `${customer.preferred_channel || 'WhatsApp'} Campaign Delivered`,
         description: `Triggered '${idx === 0 ? 'VIP Loyalty Upsell' : 'Growth Booster'}' mission template. Status: Opened & Clicked.`,
-        date: new Date(new Date(order.createdAt || order.created_at).getTime() - 24 * 60 * 60 * 1000).toLocaleDateString(),
+        date: new Date(new Date(order.createdAt || order.created_at).getTime() - 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
         icon: <Zap size={14} className="text-blue-600" />,
         color: 'bg-blue-100'
       });
@@ -175,7 +175,7 @@ export default function CustomerProfile() {
         type: 'Conversion',
         title: `Purchased via ${order.status === 'pos' ? 'POS' : 'Shopify'}`,
         description: `Order ORD-${order.id.slice(0, 6).toUpperCase()} processed. Amount: ₹${order.amount.toLocaleString()}. Status: ${order.status || 'Completed'}`,
-        date: new Date(order.createdAt || order.created_at).toLocaleDateString(),
+        date: new Date(order.createdAt || order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
         icon: <ShoppingBag size={14} className="text-emerald-600" />,
         color: 'bg-emerald-100'
       });
@@ -266,7 +266,7 @@ export default function CustomerProfile() {
               )}
               <div className="flex items-center gap-2">
                 <Calendar size={14} className="text-gray-400 flex-shrink-0" />
-                <span>Joined {new Date(customer.created_at || customer.createdAt).toLocaleDateString()}</span>
+                <span>Joined {new Date(customer.created_at || customer.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
               </div>
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function CustomerProfile() {
                     {ordersData.orders.map((order: any) => (
                       <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                         <td className="py-2.5 font-bold font-mono text-gray-900">ORD-{order.id.slice(0, 5).toUpperCase()}</td>
-                        <td className="py-2.5 text-gray-500">{new Date(order.created_at || order.createdAt).toLocaleDateString()}</td>
+                        <td className="py-2.5 text-gray-500">{new Date(order.created_at || order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                         <td className="py-2.5 text-right font-bold text-gray-900 font-mono">₹{order.amount.toLocaleString()}</td>
                         <td className="py-2.5 text-right">
                           <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-gray-100 text-gray-600 border border-gray-200">

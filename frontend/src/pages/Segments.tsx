@@ -246,7 +246,7 @@ export default function Segments() {
                     </div>
 
                     <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-100 text-xs text-gray-400 font-medium">
-                      <span>Created {new Date(seg.created_at).toLocaleDateString()}</span>
+                      <span>Created {new Date(seg.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
