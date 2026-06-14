@@ -1,5 +1,7 @@
 # Catalyst-AI
 
+**Live Demo:** [https://catalyst-xeno.vercel.app/](https://catalyst-xeno.vercel.app/)
+
 Catalyst-AI is an intelligent platform designed for customer engagement, mission planning, and analytics. It features a modern React frontend, an Express-based Node.js backend integrating with Prisma and the Groq SDK, and a dedicated simulator service for webhook events and data generation.
 
 ## Architecture
