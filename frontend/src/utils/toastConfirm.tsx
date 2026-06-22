@@ -5,10 +5,10 @@ export const confirmToast = (message: string, onConfirm: () => void) => {
   toast(
     ({ closeToast }) => (
       <div>
-        <p className="text-sm font-medium mb-3 text-gray-800">{message}</p>
+        <p className="text-sm font-medium mb-3 text-slate-800">{message}</p>
         <div className="flex justify-end gap-2">
           <button 
-            className="px-3 py-1.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors"
             onClick={closeToast}
           >
             Cancel

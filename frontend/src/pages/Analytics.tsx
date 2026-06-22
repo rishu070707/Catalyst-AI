@@ -45,7 +45,7 @@ const Analytics = () => {
   if (isLoading || !data) {
     return (
       <div className="flex justify-center items-center h-full">
-        <div className="animate-pulse text-gray-400 font-medium">Loading analytics...</div>
+        <div className="animate-pulse text-slate-400 font-medium">Loading analytics...</div>
       </div>
     );
   }
@@ -62,40 +62,40 @@ const Analytics = () => {
     <div className="max-w-6xl mx-auto pb-12 animate-fadeIn">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-text-primary tracking-tight">Analytics & ROI</h1>
-        <p className="text-gray-600 mt-2">Measure the impact of your Catalyst-AI growth missions.</p>
+        <p className="text-slate-600 mt-2">Measure the impact of your Catalyst-AI growth missions.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white border border-border-default rounded-lg p-6 shadow-sm">
-          <div className="flex items-center gap-2 text-gray-500 font-medium mb-2">
+          <div className="flex items-center gap-2 text-slate-500 font-medium mb-2">
             <TrendingUp className="w-5 h-5 text-green-500" /> Total Revenue Generated
           </div>
-          <div className="text-3xl font-bold text-gray-900">{formatINR(data.totalRevenue)}</div>
-          <div className="text-sm text-gray-400 mt-1">vs target {formatINR(data.targetRevenue)}</div>
+          <div className="text-3xl font-bold text-slate-900">{formatINR(data.totalRevenue)}</div>
+          <div className="text-sm text-slate-400 mt-1">vs target {formatINR(data.targetRevenue)}</div>
         </div>
         
         <div className="bg-white border border-border-default rounded-lg p-6 shadow-sm">
-          <div className="flex items-center gap-2 text-gray-500 font-medium mb-2">
+          <div className="flex items-center gap-2 text-slate-500 font-medium mb-2">
             <Target className="w-5 h-5 text-blue-500" /> Overall Conversion Rate
           </div>
-          <div className="text-3xl font-bold text-gray-900">
+          <div className="text-3xl font-bold text-slate-900">
             {data.funnel.sent > 0 ? ((data.funnel.purchased / data.funnel.sent) * 100).toFixed(1) : 0}%
           </div>
-          <div className="text-sm text-gray-400 mt-1">From total sent messages</div>
+          <div className="text-sm text-slate-400 mt-1">From total sent messages</div>
         </div>
 
         <div className="bg-white border border-border-default rounded-lg p-6 shadow-sm">
-          <div className="flex items-center gap-2 text-gray-500 font-medium mb-2">
+          <div className="flex items-center gap-2 text-slate-500 font-medium mb-2">
             <Activity className="w-5 h-5 text-purple-500" /> Messages Sent
           </div>
-          <div className="text-3xl font-bold text-gray-900">{data.funnel.sent.toLocaleString()}</div>
-          <div className="text-sm text-gray-400 mt-1">Across all active missions</div>
+          <div className="text-3xl font-bold text-slate-900">{data.funnel.sent.toLocaleString()}</div>
+          <div className="text-sm text-slate-400 mt-1">Across all active missions</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white border border-border-default rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Revenue Over Time</h3>
+          <h3 className="text-lg font-bold text-slate-900 mb-6">Revenue Over Time</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data.chartData}>
@@ -116,7 +116,7 @@ const Analytics = () => {
         </div>
 
         <div className="bg-white border border-border-default rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Mission Funnel</h3>
+          <h3 className="text-lg font-bold text-slate-900 mb-6">Mission Funnel</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={funnelData} layout="vertical" margin={{ left: 30 }}>

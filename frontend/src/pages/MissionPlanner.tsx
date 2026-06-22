@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { Sparkles, Send, Zap, Users, TrendingUp, MessageSquare, Loader2, RefreshCw, Tag, ShoppingCart, Megaphone, GitBranch, Save } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import MessagePreview from '../components/MessagePreview';
 
 // --- INLINED TYPES ---
 interface MissionPlan {
@@ -25,13 +25,13 @@ interface MissionPlan {
 
 // --- INLINED COMPONENTS ---
 const ConfidenceBar = ({ value, height = 2 }: { value: number; height?: number }) => (
-  <div className="w-full bg-gray-100 rounded-full overflow-hidden" style={{ height: `${height}px` }}>
+  <div className="w-full bg-slate-100 rounded-full overflow-hidden" style={{ height: `${height}px` }}>
     <div className="h-full bg-blue-600 transition-all duration-1000 ease-out" style={{ width: `${value}%` }} />
   </div>
 );
 
 const ExplainabilityCard = ({ decision, reasoning, evidence, confidence, impact }: any) => (
-  <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-2">
         <Sparkles size={16} className="text-blue-600" />
@@ -41,14 +41,14 @@ const ExplainabilityCard = ({ decision, reasoning, evidence, confidence, impact 
         {confidence}% Conf.
       </div>
     </div>
-    <h4 className="text-sm font-bold text-gray-900 mb-2">{decision}</h4>
-    <p className="text-xs text-gray-700 leading-relaxed mb-4">{reasoning}</p>
+    <h4 className="text-sm font-bold text-slate-900 mb-2">{decision}</h4>
+    <p className="text-xs text-slate-700 leading-relaxed mb-4">{reasoning}</p>
     
-    <div className="border-t border-gray-100 pt-3">
-      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Supporting Evidence</span>
+    <div className="border-t border-slate-100 pt-3">
+      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Supporting Evidence</span>
       <ul className="space-y-1.5 mb-4">
         {evidence.map((item: string, i: number) => (
-          <li key={i} className="text-xs text-gray-600 flex items-start gap-2">
+          <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
             <span className="text-blue-500 font-bold">•</span>
             <span>{item}</span>
           </li>
@@ -72,18 +72,8 @@ const channelColors: Record<string, string> = {
   rcs: '#EC4899',
 };
 
-/** Splits text on {{variable}} tokens and renders each variable as a styled blue badge */
-function renderWithVars(text: string): React.ReactNode {
-  if (!text) return null;
-  const parts = text.split(/({{[^}]+}})/g);
-  return parts.map((part, i) =>
-    /^{{[^}]+}}$/.test(part) ? (
-      <span key={i} className="inline-flex items-center px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-mono text-[10px] font-bold mx-0.5 border border-blue-200">
-        {part}
-      </span>
-    ) : part
-  );
-}
+// Remove renderWithVars as it's now in MessagePreview component
+
 
 export default function MissionPlanner() {
   const navigate = useNavigate();
@@ -155,7 +145,7 @@ export default function MissionPlanner() {
     },
     onSuccess: () => {
       toast.success("Mission draft created successfully!");
-      navigate('/missions');
+      navigate('/app/missions');
     },
     onError: (err: unknown) => {
       toast.error("Unable to create mission.");
@@ -177,8 +167,8 @@ export default function MissionPlanner() {
             <Sparkles size={13} />
             AI Mission Planner
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">Design your next growth lever.</h2>
-          <p className="text-gray-500 max-w-md mx-auto leading-relaxed">
+          <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Design your next growth lever.</h2>
+          <p className="text-slate-500 max-w-md mx-auto leading-relaxed">
             Describe your objective in plain English, and Catalyst will generate a targeted segment, messaging strategy, and channel mix.
           </p>
         </div>
@@ -186,13 +176,13 @@ export default function MissionPlanner() {
 
       {/* Input Area */}
       <div className={`max-w-4xl mx-auto w-full transition-all duration-500 ${plan || planMutation.isPending ? 'mb-6' : 'mb-10'}`}>
-        <div className="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-300 transition-colors focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 min-w-0">
+        <div className="flex items-center bg-white border border-slate-200 rounded-xl shadow-sm hover:border-blue-300 transition-colors focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 min-w-0">
           <div className="pl-4 pr-3 text-blue-600 shrink-0">
             <Sparkles size={20} />
           </div>
           <input
             type="text"
-            className="flex-1 min-w-0 bg-transparent py-4 outline-none text-gray-900 placeholder-gray-400 text-sm"
+            className="flex-1 min-w-0 bg-transparent py-4 outline-none text-slate-900 placeholder-slate-400 text-sm"
             placeholder="Describe your goal..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -219,58 +209,58 @@ export default function MissionPlanner() {
       {/* Loading State */}
       {planMutation.isPending && (
         <div className="max-w-4xl mx-auto w-full">
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col border-l-4 border-l-blue-600">
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 text-gray-900 font-semibold text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col border-l-4 border-l-blue-600">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+              <div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
                 <RefreshCw size={16} className="text-blue-600 animate-spin" />
                 Generating Mission Blueprint...
               </div>
-              <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-500 uppercase tracking-wider">
+              <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 uppercase tracking-wider">
                 Draft
               </div>
             </div>
             
             <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Target Segment */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-white shadow-sm">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+              <div className="border border-slate-100 rounded-lg p-4 bg-white shadow-sm">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">
                   <Users size={14} /> Target Segment
                 </div>
                 <div className="space-y-2.5">
-                  <div className="h-4 bg-gray-200 rounded w-full animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse" />
-                  <div className="h-5 bg-gray-200 border border-gray-300 rounded w-20 animate-pulse mt-4 flex items-center justify-center">
-                    <span className="text-[9px] text-gray-500 font-semibold uppercase">Est. 12k Users</span>
+                  <div className="h-4 bg-slate-200 rounded w-full animate-pulse" />
+                  <div className="h-4 bg-slate-200 rounded w-2/3 animate-pulse" />
+                  <div className="h-5 bg-slate-200 border border-slate-300 rounded w-20 animate-pulse mt-4 flex items-center justify-center">
+                    <span className="text-[9px] text-slate-500 font-semibold uppercase">Est. 12k Users</span>
                   </div>
                 </div>
               </div>
               
               {/* Messaging Strategy */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-white shadow-sm">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+              <div className="border border-slate-100 rounded-lg p-4 bg-white shadow-sm">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">
                   <MessageSquare size={14} /> Messaging Strategy
                 </div>
                 <div className="space-y-2.5">
-                  <div className="h-4 bg-gray-200 rounded w-full animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+                  <div className="h-4 bg-slate-200 rounded w-full animate-pulse" />
+                  <div className="h-4 bg-slate-200 rounded w-5/6 animate-pulse" />
+                  <div className="h-4 bg-slate-200 rounded w-3/4 animate-pulse" />
                 </div>
               </div>
               
               {/* Channel Mix */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-white shadow-sm">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+              <div className="border border-slate-100 rounded-lg p-4 bg-white shadow-sm">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">
                   <GitBranch size={14} /> Channel Mix
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <div className="h-6 bg-gray-200 rounded-full w-16 animate-pulse" />
-                  <div className="h-6 bg-gray-200 rounded-full w-20 animate-pulse" />
+                  <div className="h-6 bg-slate-200 rounded-full w-16 animate-pulse" />
+                  <div className="h-6 bg-slate-200 rounded-full w-20 animate-pulse" />
                 </div>
               </div>
             </div>
 
-            <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-2">
-              <button disabled className="px-4 py-2 text-xs font-semibold text-gray-400 bg-white border border-gray-200 rounded-lg">Cancel</button>
+            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
+              <button disabled className="px-4 py-2 text-xs font-semibold text-slate-400 bg-white border border-slate-200 rounded-lg">Cancel</button>
               <button disabled className="px-4 py-2 text-xs font-semibold text-white bg-blue-400 rounded-lg flex items-center gap-1.5">
                 <Save size={14} /> Save Draft
               </button>
@@ -283,15 +273,15 @@ export default function MissionPlanner() {
       {plan && !planMutation.isPending && (
         <div className="space-y-4 animate-fadeIn max-w-4xl mx-auto w-full">
           {/* Mission name */}
-          <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+          <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Mission Ready</span>
                 </div>
-                <h3 className="text-base font-bold text-gray-900">{plan.mission_name}</h3>
-                <p className="text-gray-500 text-xs mt-0.5">{plan.goal}</p>
+                <h3 className="text-base font-bold text-slate-900">{plan.mission_name}</h3>
+                <p className="text-slate-500 text-xs mt-0.5">{plan.goal}</p>
               </div>
               <div className="text-right">
                 <span className="text-[10px] uppercase font-bold text-black tracking-wider">Model Confidence</span>
@@ -302,13 +292,13 @@ export default function MissionPlanner() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Target Audience */}
-            <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
               <span className="text-[10px] font-bold text-black uppercase tracking-wider">Target Audience</span>
               <p className="text-xs text-black mt-2 leading-relaxed">{plan.target_audience}</p>
             </div>
 
             {/* Channel */}
-            <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
               <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-2">Recommended Channel</span>
               <div
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
@@ -321,13 +311,13 @@ export default function MissionPlanner() {
             </div>
 
             {/* Offer */}
-            <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
               <span className="text-[10px] font-bold text-black uppercase tracking-wider">Offer Strategy</span>
               <p className="text-xs text-black mt-2 leading-relaxed">{plan.offer_suggestion}</p>
             </div>
 
             {/* Impact Metrics */}
-            <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
               <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-3">Predicted Impact</span>
               <div className="grid grid-cols-3 gap-3">
                 {[
@@ -335,7 +325,7 @@ export default function MissionPlanner() {
                   { label: 'Revenue', value: `₹${(plan.predicted_revenue / 1000).toFixed(0)}K`, color: '#059669' },
                   { label: 'Conversions', value: plan.predicted_conversions.toLocaleString('en-IN'), color: '#06B6D4' },
                 ].map((m) => (
-                  <div key={m.label} className="text-center p-3 bg-gray-50 border border-gray-100 rounded-lg">
+                  <div key={m.label} className="text-center p-3 bg-slate-50 border border-slate-100 rounded-lg">
                     <div className="text-sm font-bold font-mono" style={{ color: m.color }}>{m.value}</div>
                     <div className="text-[10px] text-black font-bold uppercase tracking-wider mt-1">{m.label}</div>
                   </div>
@@ -359,64 +349,19 @@ export default function MissionPlanner() {
           />
 
           {/* Message Preview */}
-          <div className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-            <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-3">Personalized Message Preview</span>
-            {plan.recommended_channel === 'email' && plan.message_preview?.includes('Subject:') ? (() => {
-              const [subjectLine, ...bodyParts] = plan.message_preview.split('\n\n');
-              const subject = subjectLine.replace(/^Subject:\s*/i, '');
-              const body = bodyParts.join('\n\n');
-              return (
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-gray-100 px-4 py-2.5 border-b border-gray-200 flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider shrink-0">Subject</span>
-                    <span className="text-xs font-semibold text-gray-900">{renderWithVars(subject)}</span>
-                  </div>
-                  <div className="p-4 bg-gray-50 text-xs text-gray-800 leading-relaxed font-sans">
-                    {body.split('\n').map((line, i) => (
-                      <p key={i} className={line === '' ? 'mb-2' : 'mb-0'}>{renderWithVars(line)}</p>
-                    ))}
-                  </div>
-                </div>
-              );
-            })() : plan.recommended_channel === 'rcs' && plan.message_preview?.includes('Headline:') ? (() => {
-              const sections: Record<string, string> = {};
-              plan.message_preview.split('\n\n').forEach(block => {
-                const colon = block.indexOf(':');
-                if (colon !== -1) {
-                  const key = block.slice(0, colon).trim().toLowerCase();
-                  sections[key] = block.slice(colon + 1).trim();
-                }
-              });
-              return (
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-3 border-b border-gray-200">
-                    <span className="text-[10px] font-bold text-purple-500 uppercase tracking-wider block mb-1">RCS Card</span>
-                    <span className="text-sm font-bold text-gray-900">{renderWithVars(sections['headline'] || '')}</span>
-                  </div>
-                  <div className="p-4 bg-gray-50 text-xs text-gray-800 leading-relaxed">
-                    {renderWithVars(sections['body'] || '')}
-                  </div>
-                  {sections['cta'] && (
-                    <div className="px-4 pb-4">
-                      <span className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-xs font-bold rounded-lg">
-                        {renderWithVars(sections['cta'])}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })() : (
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono text-black leading-relaxed">
-                {renderWithVars(plan.message_preview)}
-              </div>
-            )}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <span className="text-[10px] font-bold text-black uppercase tracking-wider block mb-4">Personalized Message Preview</span>
+            <MessagePreview
+              channel={plan.recommended_channel}
+              message={plan.message_preview}
+            />
           </div>
 
           {/* Launch Buttons */}
           <div className="flex gap-3 justify-end pt-4">
             <button
               onClick={() => setPlan(null)}
-              className="px-5 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
             >
               Discard
             </button>
@@ -438,23 +383,23 @@ export default function MissionPlanner() {
       {/* Try asking... */}
       {!plan && !planMutation.isPending && (
         <div className="max-w-4xl mx-auto w-full mt-auto pt-10 pb-6">
-          <h3 className="text-sm font-medium text-gray-900 mb-4">Try asking...</h3>
+          <h3 className="text-sm font-medium text-slate-900 mb-4">Try asking...</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <button onClick={() => setPrompt('Boost trial conversion rate in LATAM.')} className="p-4 bg-white border border-gray-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
+            <button onClick={() => setPrompt('Boost trial conversion rate in LATAM.')} className="p-4 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
               <TrendingUp size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-xs text-gray-700 font-medium leading-relaxed">Boost trial conversion rate in LATAM.</span>
+              <span className="text-xs text-slate-700 font-medium leading-relaxed">Boost trial conversion rate in LATAM.</span>
             </button>
-            <button onClick={() => setPrompt('Prevent churn for yearly subscribers.')} className="p-4 bg-white border border-gray-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
+            <button onClick={() => setPrompt('Prevent churn for yearly subscribers.')} className="p-4 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
               <Tag size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-xs text-gray-700 font-medium leading-relaxed">Prevent churn for yearly subscribers.</span>
+              <span className="text-xs text-slate-700 font-medium leading-relaxed">Prevent churn for yearly subscribers.</span>
             </button>
-            <button onClick={() => setPrompt('Upsell premium features to power users.')} className="p-4 bg-white border border-gray-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
+            <button onClick={() => setPrompt('Upsell premium features to power users.')} className="p-4 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
               <ShoppingCart size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-xs text-gray-700 font-medium leading-relaxed">Upsell premium features to power users.</span>
+              <span className="text-xs text-slate-700 font-medium leading-relaxed">Upsell premium features to power users.</span>
             </button>
-            <button onClick={() => setPrompt('Launch holiday promo for dormant accounts.')} className="p-4 bg-white border border-gray-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
+            <button onClick={() => setPrompt('Launch holiday promo for dormant accounts.')} className="p-4 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 transition-all flex flex-col gap-3 group shadow-sm hover:shadow">
               <Megaphone size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-xs text-gray-700 font-medium leading-relaxed">Launch holiday promo for dormant accounts.</span>
+              <span className="text-xs text-slate-700 font-medium leading-relaxed">Launch holiday promo for dormant accounts.</span>
             </button>
           </div>
         </div>

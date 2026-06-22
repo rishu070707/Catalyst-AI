@@ -3,8 +3,39 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-surface-bg text-text-primary font-sans antialiased;
+    @apply bg-surface-bg text-text-primary font-sans antialiased selection:bg-primary-blue/20 selection:text-primary-blue;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-soft;
+  }
+  .glass-dark {
+    @apply bg-surface-dark/60 backdrop-blur-xl border border-white/10 shadow-premium;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-blue to-primary-violet;
+  }
+  
+  .bg-grid-white {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   }
 }
 
@@ -14,7 +45,7 @@
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.35s ease-out both;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes indeterminate {
@@ -25,3 +56,12 @@
 .animate-indeterminate {
   animation: indeterminate 1.5s infinite linear;
 }
+
+@keyframes pageEnter {
+  0% { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.page-enter {
+  animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ArrowLeft, CheckCircle2, XCircle, Lightbulb, TrendingUp, Users, IndianRupee, MessageSquare, Target } from 'lucide-react';
 import { toast } from 'react-toastify';
+import MessagePreview from '../components/MessagePreview';
 
 // --- INLINED TYPES ---
 interface Mission {
@@ -49,7 +50,7 @@ const StatusBadge = ({ status, size = 'sm' }: { status: string; size?: 'sm' | 'm
     running: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     completed: 'bg-blue-100 text-blue-700 border-blue-200',
     planned: 'bg-blue-100 text-blue-700 border-blue-200',
-    draft: 'bg-gray-100 text-gray-700 border-gray-200',
+    draft: 'bg-slate-100 text-slate-700 border-slate-200',
     failed: 'bg-rose-100 text-rose-700 border-rose-200',
   };
   const color = colors[status.toLowerCase()] || colors.draft;
@@ -65,7 +66,7 @@ const StatusBadge = ({ status, size = 'sm' }: { status: string; size?: 'sm' | 'm
 
 const ConfidenceBar = ({ value, height = 2 }: { value: number; height?: number }) => {
   return (
-    <div className="w-full bg-gray-100 rounded-full overflow-hidden" style={{ height: `${height}px` }}>
+    <div className="w-full bg-slate-100 rounded-full overflow-hidden" style={{ height: `${height}px` }}>
       <div 
         className="h-full bg-blue-600 transition-all duration-1000 ease-out" 
         style={{ width: `${value}%` }} 
@@ -210,7 +211,7 @@ export default function MissionDetail() {
   }, [mission]);
 
   if (loadingMission) return <PageLoader />;
-  if (!mission) return <div className="p-10 text-center text-gray-500">Mission not found</div>;
+  if (!mission) return <div className="p-10 text-center text-slate-500">Mission not found</div>;
 
   const funnel = (mission as any).funnel || { sent: 0, delivered: 0, opened: 0, clicked: 0, purchased: 0 };
   
@@ -236,25 +237,25 @@ export default function MissionDetail() {
     <div className="p-4 md:p-6 space-y-4 md:space-y-6 max-w-5xl mx-auto page-enter">
       {/* Back */}
       <button 
-        onClick={() => navigate('/missions')} 
-        className="flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
+        onClick={() => navigate('/app/missions')} 
+        className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
       >
         <ArrowLeft size={14} />
         Back to Mission Control
       </button>
 
       {/* Header */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <StatusBadge status={mission.status} size="md" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">{mission.name}</h2>
-            <p className="text-xs text-gray-500 mt-1">{mission.goal}</p>
+            <h2 className="text-xl font-bold text-slate-900">{mission.name}</h2>
+            <p className="text-xs text-slate-500 mt-1">{mission.goal}</p>
           </div>
           <div className="text-right">
-            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AI Confidence</div>
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AI Confidence</div>
             <div className="text-2xl font-bold text-blue-600 font-mono mt-1">{confScore}%</div>
           </div>
         </div>
@@ -263,6 +264,16 @@ export default function MissionDetail() {
         <div className="pt-2">
           <ConfidenceBar value={confScore} height={5} />
         </div>
+
+        {/* Message Preview inside the header card */}
+        {(mission as any).message_template || (mission as any).message_preview ? (
+          <div className="pt-3 border-t border-slate-100">
+            <MessagePreview
+              channel={mission.channel}
+              message={(mission as any).message_template || (mission as any).message_preview || ''}
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Metrics Grid */}
@@ -275,12 +286,12 @@ export default function MissionDetail() {
           { label: 'Purchased', value: funnel.purchased || 0, icon: Users },
           { label: 'Revenue', value: (mission as any).actual_revenue || m.actual_revenue || 0, icon: IndianRupee, prefix: '₹' },
         ].map((metric) => (
-          <div key={metric.label} className="bg-white border border-gray-200 rounded-xl p-4 text-center flex flex-col items-center">
+          <div key={metric.label} className="bg-white border border-slate-200 rounded-xl p-4 text-center flex flex-col items-center">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-blue-100 bg-blue-50 mb-2">
               <metric.icon size={15} className="text-blue-600" />
             </div>
-            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1.5">{metric.label}</div>
-            <div className="text-lg font-bold font-mono text-gray-900">
+            <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1.5">{metric.label}</div>
+            <div className="text-lg font-bold font-mono text-slate-900">
               {metric.prefix}{metric.label === 'Revenue' && metric.value >= 1000 ? `${(metric.value / 1000).toFixed(0)}K` : metric.value}
             </div>
           </div>
@@ -289,8 +300,8 @@ export default function MissionDetail() {
 
       {/* Webhook/Event History */}
       {eventsRaw?.events && eventsRaw.events.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
-          <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider flex items-center gap-2">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+          <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2">
             <Target size={14} className="text-blue-600" />
             Webhook Event History
           </h3>
@@ -300,12 +311,12 @@ export default function MissionDetail() {
               const color = 
                 e.event_type === 'PURCHASED' ? 'text-emerald-600' :
                 e.event_type === 'CLICKED' ? 'text-blue-600' :
-                e.event_type === 'OPENED' ? 'text-sky-600' : 'text-gray-500';
+                e.event_type === 'OPENED' ? 'text-sky-600' : 'text-slate-500';
               return (
-                <div key={e.id} className="flex items-center gap-3 text-sm border-b border-gray-50 pb-2">
-                  <span className="text-gray-400 font-mono text-xs">{time}</span>
+                <div key={e.id} className="flex items-center gap-3 text-sm border-b border-slate-50 pb-2">
+                  <span className="text-slate-400 font-mono text-xs">{time}</span>
                   <span className={`font-bold tracking-wider text-xs ${color}`}>{e.event_type}</span>
-                  <span className="text-gray-500 text-xs truncate flex-1">Customer: {e.customer_id.substring(0,8)}...</span>
+                  <span className="text-slate-500 text-xs truncate flex-1">Customer: {e.customer_id.substring(0,8)}...</span>
                 </div>
               );
             })}
@@ -315,8 +326,8 @@ export default function MissionDetail() {
 
       {/* Delivery funnel */}
       {m.delivery_rate !== undefined && (
-        <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
-          <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider flex items-center gap-2">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+          <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2">
             <Target size={14} className="text-blue-600" />
             Campaign Funnel Metrics
           </h3>
@@ -328,8 +339,8 @@ export default function MissionDetail() {
               { label: 'Converted', value: m.actual_conversion_rate || 0, color: 'bg-amber-600', text: 'text-amber-700' },
             ].map((step) => (
               <div key={step.label} className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-gray-500 w-20">{step.label}</span>
-                <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden relative">
+                <span className="text-xs font-semibold text-slate-500 w-20">{step.label}</span>
+                <div className="flex-1 h-2.5 rounded-full bg-slate-100 border border-slate-200 overflow-hidden relative">
                   {(mission?.status?.toLowerCase() === 'running' && step.value === 0) ? (
                     <div className={`absolute inset-0 w-full h-full opacity-40 animate-pulse ${step.color}`} />
                   ) : (
@@ -355,8 +366,8 @@ export default function MissionDetail() {
             <Lightbulb size={24} className="text-blue-600" />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Mission Autopsy & Business Outcomes</h3>
-            <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">Generate AI-powered insights, sentiment scores, and ROI calculations based on your campaign's performance.</p>
+            <h3 className="font-bold text-slate-900">Mission Autopsy & Business Outcomes</h3>
+            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">Generate AI-powered insights, sentiment scores, and ROI calculations based on your campaign's performance.</p>
           </div>
           <button 
             onClick={() => setIsAutopsyEnabled(true)}
@@ -370,23 +381,23 @@ export default function MissionDetail() {
       {/* AI Autopsy / Insights */}
       {isAutopsyEnabled && autopsy && (
         <div className="space-y-4">
-          <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <span>{isCompleted ? 'Mission Autopsy & Business Outcomes' : 'Live AI Insights & Projections'}</span>
           </h3>
 
           {/* Summary */}
           <div className="bg-white border border-blue-200 rounded-xl p-5 space-y-4">
-            <p className="text-xs text-gray-600 italic leading-relaxed bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg">
+            <p className="text-xs text-slate-600 italic leading-relaxed bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg">
               "{autopsy.summary}"
             </p>
             <div className="flex gap-6 pt-2">
               <div>
-                <span className="text-[10px] text-gray-400 block uppercase font-bold">ATTRIBUTED ROI</span>
+                <span className="text-[10px] text-slate-400 block uppercase font-bold">ATTRIBUTED ROI</span>
                 <span className="text-xl font-bold text-emerald-600 font-mono mt-0.5 block">{autopsy.roi}x</span>
               </div>
-              <div className="border-r border-gray-200" />
+              <div className="border-r border-slate-200" />
               <div>
-                <span className="text-[10px] text-gray-400 block uppercase font-bold">AI SENTIMENT SCORE</span>
+                <span className="text-[10px] text-slate-400 block uppercase font-bold">AI SENTIMENT SCORE</span>
                 <span className="text-xl font-bold text-blue-600 font-mono mt-0.5 block">{autopsy.sentiment_score}/100</span>
               </div>
             </div>
@@ -394,14 +405,14 @@ export default function MissionDetail() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* What Worked */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <div className="bg-white border border-slate-200 rounded-xl p-5">
               <div className="flex items-center gap-2 mb-3">
                 <CheckCircle2 size={14} className="text-emerald-600" />
                 <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">What Worked</span>
               </div>
               <ul className="space-y-2">
                 {(autopsy.what_worked || []).map((item: string, i: number) => (
-                  <li key={i} className="text-xs text-gray-600 flex items-start gap-2 leading-relaxed">
+                  <li key={i} className="text-xs text-slate-600 flex items-start gap-2 leading-relaxed">
                     <span className="text-emerald-600 font-bold">•</span>
                     <span>{item}</span>
                   </li>
@@ -410,14 +421,14 @@ export default function MissionDetail() {
             </div>
 
             {/* What Didn't */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <div className="bg-white border border-slate-200 rounded-xl p-5">
               <div className="flex items-center gap-2 mb-3">
                 <XCircle size={14} className="text-rose-600" />
                 <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">What Didn't Work</span>
               </div>
               <ul className="space-y-2">
                 {(autopsy.what_didnt || []).map((item: string, i: number) => (
-                  <li key={i} className="text-xs text-gray-600 flex items-start gap-2 leading-relaxed">
+                  <li key={i} className="text-xs text-slate-600 flex items-start gap-2 leading-relaxed">
                     <span className="text-rose-600 font-bold">•</span>
                     <span>{item}</span>
                   </li>
@@ -426,14 +437,14 @@ export default function MissionDetail() {
             </div>
 
             {/* Suggestions */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <div className="bg-white border border-slate-200 rounded-xl p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb size={14} className="text-amber-600" />
                 <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">AI Suggestions</span>
               </div>
               <ul className="space-y-2">
                 {(autopsy.suggestions || []).map((item: string, i: number) => (
-                  <li key={i} className="text-xs text-gray-600 flex items-start gap-2 leading-relaxed">
+                  <li key={i} className="text-xs text-slate-600 flex items-start gap-2 leading-relaxed">
                     <span className="text-amber-600 font-bold">→</span>
                     <span>{item}</span>
                   </li>

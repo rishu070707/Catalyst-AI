@@ -30,10 +30,10 @@ const PageLoader = () => (
 );
 
 const EmptyState = ({ icon: Icon, title, description, action }: any) => (
-  <div className="flex flex-col items-center justify-center text-center p-12 bg-white rounded-xl border border-gray-200">
-    <Icon className="w-12 h-12 text-gray-300 mb-4" />
-    <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-    <p className="text-gray-500 max-w-sm mb-6">{description}</p>
+  <div className="flex flex-col items-center justify-center text-center p-12 bg-white rounded-xl border border-slate-200">
+    <Icon className="w-12 h-12 text-slate-300 mb-4" />
+    <h3 className="text-lg font-bold text-slate-900 mb-2">{title}</h3>
+    <p className="text-slate-500 max-w-sm mb-6">{description}</p>
     {action && (
       <button onClick={action.onClick} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors">
         {action.label}
@@ -58,30 +58,30 @@ const MissionCard = ({ mission, onLaunch, onDelete, isLaunching }: any) => {
 
   return (
     <div 
-      onClick={() => navigate(`/missions/${mission.id}`)}
-      className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col hover:border-blue-400 transition-all shadow-sm hover:shadow-md cursor-pointer group"
+      onClick={() => navigate(`/app/missions/${mission.id}`)}
+      className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col hover:border-blue-400 transition-all shadow-sm hover:shadow-md cursor-pointer group"
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${
             mission.status === 'running' ? 'bg-emerald-500' :
             mission.status === 'completed' ? 'bg-blue-500' :
-            mission.status === 'draft' ? 'bg-gray-400' : 'bg-blue-500'
+            mission.status === 'draft' ? 'bg-slate-400' : 'bg-blue-500'
           }`} />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{mission.status}</span>
-          <span className="text-[10px] text-gray-400">•</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{mission.status}</span>
+          <span className="text-[10px] text-slate-400">•</span>
           <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-1.5 py-0.5 rounded">{mission.channel}</span>
         </div>
         <div className="flex items-center gap-1">
           <button 
-            className="text-gray-400 hover:text-blue-600 hover:bg-blue-50 p-1.5 rounded transition-colors" 
-            onClick={(e) => { e.stopPropagation(); navigate(`/missions/${mission.id}`); }}
+            className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 p-1.5 rounded transition-colors" 
+            onClick={(e) => { e.stopPropagation(); navigate(`/app/missions/${mission.id}`); }}
             title="View Mission"
           >
             <Rocket size={14} className="group-hover:text-blue-600 transition-colors" />
           </button>
           <button 
-            className="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition-colors" 
+            className="text-slate-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition-colors" 
             onClick={(e) => { e.stopPropagation(); onDelete(mission.id); }}
             title="Delete Mission"
           >
@@ -90,33 +90,33 @@ const MissionCard = ({ mission, onLaunch, onDelete, isLaunching }: any) => {
         </div>
       </div>
       
-      <h3 className="text-lg font-bold text-gray-900 mb-1 leading-tight group-hover:text-blue-700 transition-colors">{mission.name}</h3>
-      <p className="text-xs text-gray-500 line-clamp-1 mb-5">{mission.goal || mission.segmentRule || 'AI-generated targeted campaign'}</p>
+      <h3 className="text-lg font-bold text-slate-900 mb-1 leading-tight group-hover:text-blue-700 transition-colors">{mission.name}</h3>
+      <p className="text-xs text-slate-500 line-clamp-1 mb-5">{mission.goal || mission.segmentRule || 'AI-generated targeted campaign'}</p>
 
       <div className="grid grid-cols-3 gap-2 mb-5">
-        <div className="bg-gray-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
-          <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Audience Reach</div>
-          <div className="text-sm font-bold font-mono text-gray-900">{reach.toLocaleString()}</div>
+        <div className="bg-slate-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
+          <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Audience Reach</div>
+          <div className="text-sm font-bold font-mono text-slate-900">{reach.toLocaleString()}</div>
           <div className="text-[9px] text-blue-600 font-bold">{isActual ? 'ACTUAL' : 'EST.'}</div>
         </div>
-        <div className="bg-gray-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
-          <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Est. Revenue</div>
-          <div className="text-sm font-bold font-mono text-gray-900">₹{(revenue / 1000).toFixed(0)}K</div>
+        <div className="bg-slate-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
+          <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Est. Revenue</div>
+          <div className="text-sm font-bold font-mono text-slate-900">₹{(revenue / 1000).toFixed(0)}K</div>
           <div className="text-[9px] text-emerald-600 font-bold">{isActual ? 'ACTUAL' : 'EST.'}</div>
         </div>
-        <div className="bg-gray-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
-          <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Conversion</div>
-          <div className="text-sm font-bold font-mono text-gray-900">{conversion}%</div>
+        <div className="bg-slate-50 group-hover:bg-blue-50/30 transition-colors p-2 rounded-lg text-center">
+          <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Conversion</div>
+          <div className="text-sm font-bold font-mono text-slate-900">{conversion}%</div>
           <div className="text-[9px] text-blue-600 font-bold">{isActual ? 'ACTUAL' : 'EST.'}</div>
         </div>
       </div>
 
-      <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-3">
+      <div className="mt-auto pt-4 border-t border-slate-100 flex flex-col gap-3">
         <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
-          <span className="text-gray-400">AI Confidence Score</span>
+          <span className="text-slate-400">AI Confidence Score</span>
           <span className="text-blue-600">{confScore}%</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+        <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
           <div className="bg-blue-600 h-full rounded-full transition-all" style={{ width: `${confScore}%` }} />
         </div>
         
@@ -131,7 +131,7 @@ const MissionCard = ({ mission, onLaunch, onDelete, isLaunching }: any) => {
         )}
         {(mission.status.toLowerCase() === 'completed' || mission.status.toLowerCase() === 'running') && (
           <div className="flex mt-2">
-             <button onClick={(e) => { e.stopPropagation(); navigate(`/missions/${mission.id}`); }} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
+             <button onClick={(e) => { e.stopPropagation(); navigate(`/app/missions/${mission.id}`); }} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
                View Results & Autopsy
              </button>
           </div>
@@ -276,8 +276,8 @@ export default function Missions() {
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-8 gap-4 text-center md:text-left">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-1">Mission Control</h2>
-          <p className="text-xs md:text-sm text-gray-500 font-medium">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight mb-1">Mission Control</h2>
+          <p className="text-xs md:text-sm text-slate-500 font-medium">
             {missions.length} total growth missions registered · {counts['running'] || 0} currently active
           </p>
         </div>
@@ -297,13 +297,13 @@ export default function Missions() {
               }, 500);
             }}
             id="refresh-btn"
-            className="flex-1 md:flex-none justify-center bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center gap-2 shadow-sm"
+            className="flex-1 md:flex-none justify-center bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center gap-2 shadow-sm"
           >
-            <RefreshCw id="refresh-icon" size={16} className="text-gray-400 transition-colors duration-300" />
+            <RefreshCw id="refresh-icon" size={16} className="text-slate-400 transition-colors duration-300" />
             Refresh
           </button>
           <button
-            onClick={() => navigate('/planner')}
+            onClick={() => navigate('/app/planner')}
             className="flex-1 md:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2 shadow-sm"
           >
             <Plus size={16} />
@@ -324,13 +324,13 @@ export default function Missions() {
               className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold border transition-all flex items-center gap-2 whitespace-nowrap ${
                 isActive
                   ? 'text-blue-700 bg-blue-50 border-blue-200'
-                  : 'text-gray-600 bg-white hover:bg-gray-50 border-gray-200'
+                  : 'text-slate-600 bg-white hover:bg-slate-50 border-slate-200'
               }`}
             >
               {f.label}
               <span
                 className={`px-1.5 py-0.5 rounded-md text-[10px] md:text-[11px] font-bold leading-none flex items-center justify-center min-w-[18px] md:min-w-[20px] ${
-                  isActive ? 'bg-blue-200/50 text-blue-700' : 'bg-gray-100 text-gray-500'
+                  isActive ? 'bg-blue-200/50 text-blue-700' : 'bg-slate-100 text-slate-500'
                 }`}
               >
                 {count}
@@ -346,7 +346,7 @@ export default function Missions() {
           icon={Rocket}
           title="No missions found"
           description="Create your first AI-powered mission to start driving growth"
-          action={{ label: 'Create Mission', onClick: () => navigate('/planner') }}
+          action={{ label: 'Create Mission', onClick: () => navigate('/app/planner') }}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
